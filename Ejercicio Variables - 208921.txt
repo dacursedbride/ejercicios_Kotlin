@@ -1,0 +1,30 @@
+fun main() {
+ 
+    //Constantes - Implicito
+    val nombre = "Sir Argus";
+    val raza = "Kobold";
+    val clase_es_Paladin = true;
+    val nivel = 5;
+    val experiencia = 15000.64; 
+    
+    //Constantes - explicito
+    val tipo: String = "Enemigo, Zombie";
+    val Puntos_deVida_total: Int = 8;
+    val puntos_de_EXP: Float = 450.5; 
+    val Esta_muerto: Boolean = false;
+    val dialogo:String = "Urrghhhh, cerebros";
+    
+    //Variables - Implicito
+    var Fruta = "Coco";
+    var Cantidad = 1; 
+    var es_tropical = true; 
+    var flotabilidad = 33.33;
+    var agua = "De coco";
+    
+    //Variables - explicito
+    var ensalada:String = "Con croutons";
+    var tiene_aderezos:Boolean = true;
+    var es_saludable:Boolean = false;
+    var numero_porciones:Float = 2.5; 
+    var personasordenaron:Int = 3;
+}
