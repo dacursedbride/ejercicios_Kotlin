@@ -1,0 +1,40 @@
+fun main() {
+//encontré que esta era una forma de hacer el número random sin importar en Kotlin: 
+    var respuestaCorrecta = (1..100).random() 
+    var numerodeIntentos = 0
+    var respuesta = -1
+
+    while (respuesta != respuestaCorrecta) {
+        numerodeIntentos++
+        
+        if (numerodeIntentos > 1) {
+            println("Respuesta incorrecta ¡Intenta de nuevo!")
+        }
+        
+        respuesta = validarNumeroEntrada()
+    }
+
+    println("¡Felicidades, le atinaste! Tu numero de intentos fue: $numerodeIntentos")
+}
+
+fun validarNumeroEntrada(): Int {
+    var respuesta: String? = null
+    var respuestavalida: Int? = null
+
+    print("Por favor introduce un numero sin punto decimal: ")
+
+    while (true) {
+        respuesta = readlnOrNull()
+        if (respuesta == null) {
+            println("No se que intentaste hacer, por favor intenta de nuevo")
+            continue
+        }
+
+        respuestavalida = respuesta.toIntOrNull()
+        if (respuestavalida == null) {
+            println("Eso que introdujiste no puede ser leido como numero. Por favor ingresa un caracter numerico (1, 2, 3...)")
+        } else {
+            return respuestavalida
+        }
+    }
+}
