@@ -1,0 +1,72 @@
+// Este ejercicio lo hice basándome en la sugerencia dada en clase (Wolfwalkers), pero haciendo una tipo-ficha de personaje basándolo en un personaje de D&D que tenía en una campaña, haciendo una medio combinación de ambos universos. 
+// En base al ejercicio se me ocurrió hacer una presentación del personaje tomando elementos de su ficha. 
+
+data class Region(val nombre: String, val estado: String)
+
+class Poder(val nombre: String) {
+    fun descripcion(): String {
+        return "Este poder permite: $nombre"
+    }
+}
+
+class FormaHumana(
+ 	   val nombre: String,
+ 	   val edad: Int,
+  	   val genero: String,
+  	   val ropa: String = "Ropa sencilla de bosque"
+) {
+    fun presentarse(): String {
+        return "Hola, soy $nombre, tengo $edad años y vivo en el bosque."
+    }
+}
+
+class FormaLobo(
+  	  val pelaje: String,
+  	  val tamano: String,
+  	  val ojos: String,
+  	  val habilidades: List<String> = emptyList()
+) {
+    fun aullar(): String {
+        return "Auuuuuuu... (un aullido fuerte resuena en el bosque)"
+    }
+}
+
+class HistoriaPersonal(
+  	  val origen: String, 
+  	  val familia: String?,
+  	  val lazoEspiritual: String, 
+  	  val alianzas: List<String> = emptyList()
+) {
+    fun esWolfWalkerOriginal(): Boolean {
+        return origen.lowercase() == "original"
+    }
+}
+
+fun main() {
+  	  val bosqueIgneo = Region("Icewindale", "Faerun del norte")
+
+  	  val poder1 = Poder("Stamina lobuna")
+
+  	  val formaHumana = FormaHumana("Siegfrida", 21, "they/them", "capa de hojas tejidas")
+
+   	  val formaLobo = FormaLobo(
+        pelaje = "Castaño rojizo con parte blanca en la cola",
+        tamano = "grande",
+        ojos = "verde aceituna",
+        habilidades = listOf("resiste bien el frío", "es intimidante")
+    )
+
+      val historia = HistoriaPersonal(
+        origen = "convertida",
+        familia = "Hija de un guardabosques y una sanadora del pueblo",
+        lazoEspiritual = "Fenrik, el lobo de la tormenta",
+        alianzas = listOf("Aldea del Roble", "Los Cuervos del Norte")
+    )
+
+    println(formaHumana.presentarse())
+    println("Vive en la región: ${bosqueIgneo.nombre}")
+    println("Es Wolf Walker original: ${historia.esWolfWalkerOriginal()}")
+    println("Su poder principal: ${poder1.descripcion()}")
+    println("En forma de lobo, su pelaje es: ${formaLobo.pelaje}")
+    println(formaLobo.aullar())
+}
