@@ -1,0 +1,245 @@
+//elemento añadido: 1/3
+interface Habilidad {
+    var nombre: String
+    var activo: Boolean
+    var descripcion: String?
+
+    fun activar(): Boolean {
+        if (activo) {
+            return false
+        } else {
+            activo = true
+            return true
+        }
+    }
+
+    fun desactivar(): Boolean {
+        if (!activo) {
+            return false
+        } else {
+            activo = false
+            return true
+        }
+    }
+}
+
+//elemento añadido: 2/3
+interface Habilidades {
+    var capacidades: MutableList<Habilidad>
+
+    fun activar_capacidad(nombre: String): Boolean {
+        for (capacidad in capacidades) {
+            if (capacidad.nombre == nombre) {
+                return capacidad.activar()
+            }
+        }
+        return false
+    }
+
+    fun agregar_capacidad(capacidad_nueva: Habilidad) {
+        capacidades.add(capacidad_nueva)
+    }
+
+    fun descripcion(): String {
+        return capacidades.joinToString(", ") { it.nombre }
+    }
+}
+
+
+class SuperPoder(
+    override var nombre: String,
+    override var activo: Boolean,
+    override var descripcion: String?
+) : Habilidad
+
+// ---------------------------------------------------------------
+
+interface EstadoBebe
+
+enum class EstadosBebes : EstadoBebe {
+    despierto,
+    llorando,
+    dormido,
+    comiendo,
+    tieso,
+    cagado_y_miado,
+    viendo_paw_patrol,
+    
+    //Añadido de 5 comportamientos al bebé: 
+    jugando_zelda,
+    usando_chatgpt_para_la_tesis,
+    haciendo_aristofurras_en_Unity,
+    morbin_time,
+    funado
+}
+
+    //"Otro" niño, que en realidad es el mismo, pero muerto. (?) 
+    //Tiene menos comportamientos porque ya empezaba a quedarme sin ideas. 
+enum class EstadosBebeFantasma : EstadoBebe {
+    actividad_paranormaleando,
+    esta_poseido,
+    exorcisado,
+    comiendo_ectoplasma,
+    en_estado_de_revivicion
+}
+
+    // + le agregué una interfaz porque sino no me dejaba cambiar entre 
+    // el bebé vivo y el bebé fantasma
+
+class Bebe(
+    var nombre: String,
+    var hambre: Int,
+    var pañal_lleno: Int,
+    var sueño: Int,
+    var estado: EstadoBebe = EstadosBebes.despierto
+) : Habilidades {
+    override var capacidades: MutableList<Habilidad> = mutableListOf()
+    
+    //private 
+    val estaVivo: Boolean
+        get() = estado is EstadosBebes
+
+    //private 
+    val esFantasma: Boolean
+        get() = estado is EstadosBebeFantasma
+
+    fun alimentar() {
+        if (esFantasma) {
+            println("No puedo comer normal we, mata una hamburguesa o algo.")
+            return
+        }
+        hambre = (hambre - 25)
+        println("$nombre ha recibido tu tributo.")
+    }
+
+    fun dormir() {
+        if (esFantasma) {
+            println("Tengo insomnio y haré de eso el problema de todos.")
+            return
+        }
+        if ((estado == EstadosBebes.despierto || estado == EstadosBebes.comiendo) && sueño > 49) {
+            sueño = 0
+            estado = EstadosBebes.dormido
+            println("Mimido")
+        } else {
+            println("Mimidon't")
+        }
+    }
+
+    fun despertar() {
+        if (esFantasma) {
+            println("Estoy muerto, no ocupo dormir >:(")
+            return
+        }
+        if (estado == EstadosBebes.dormido) {
+            estado = EstadosBebes.despierto
+            println("5 minutitos más")
+        }
+    }
+
+    fun despertar_con_agua() {
+        if (esFantasma) {
+            println("¿Cómo le vas a echar agua a un fantasma si no está bendita? duh")
+            return
+        }
+        if (estado == EstadosBebes.dormido) {
+            estado = EstadosBebes.tieso
+            println("Su $nombre ahora es tipo fantasma:D")
+        }
+    }
+
+    fun actualizar_estado() {
+        when (estado) {
+            EstadosBebes.despierto -> {
+                sueño += 5
+                hambre += 5
+                pañal_lleno += 3
+            }
+            EstadosBebes.comiendo -> {
+                hambre -= 40
+            }
+            EstadosBebeFantasma.comiendo_ectoplasma -> {
+                println("$nombre está tomando una bien fría (muerta, pues)")
+            }
+            EstadosBebeFantasma.en_estado_de_revivicion -> {
+                println("Si esto sale bien, no será necesario explicarle nada a la policía")
+                estado = EstadosBebes.despierto
+                sueño = 30
+                hambre = 60
+                pañal_lleno = 80
+                println("$nombre ha vuelto a la vida. Nadie sabe cómo, pero aquí está.")
+            }
+            else -> {}
+        }
+    }
+
+    fun picar_con_un_palo(): String {
+        return when (estado) {
+            EstadosBebes.tieso -> "¿Que si me morí? ps sí"
+            EstadosBebeFantasma.actividad_paranormaleando -> "BooOooO.MP4"
+            EstadosBebeFantasma.esta_poseido -> "Phasmophobia_de_bajo_presupuesto.EXE"
+            EstadosBebeFantasma.exorcisado -> "El exorcismo de $nombre, ahora en cines"
+            EstadosBebeFantasma.comiendo_ectoplasma -> "No es lo mismo que puré de zanahoria, pero alimenta."
+            EstadosBebeFantasma.en_estado_de_revivicion -> "Siento que mi cuerpo vuelve… no me interrumpas."
+            else -> "No sé qué soy en este momento."
+        }
+    }
+
+    fun matabebe() {
+        if (!estaVivo) {
+            println("$nombre ya no está entre los vivos. No puedes matarlo otra vez.")
+            return
+        }
+        if (estado == EstadosBebes.tieso) {
+            estado = EstadosBebeFantasma.actividad_paranormaleando
+            println("$nombre ha dejado este plano.")
+        } else {
+            println("$nombre aún no está listo para morir. Aunque su pañal diga lo contrario.")
+        }
+    }
+
+    fun revivir() {
+        if (esFantasma) {
+            estado = EstadosBebeFantasma.en_estado_de_revivicion
+            println("$nombre está comenzando el proceso de regreso a la vida.")
+        } else {
+            println("$nombre ya está vivo.")
+        }
+    }
+
+fun estado_actual(): String {
+    return when (estado) {
+        EstadosBebes.despierto -> "Rise and shine, i'm awake"
+        EstadosBebes.dormido -> "Estoy mimido"
+        EstadosBebes.tieso -> "¿Que si me morí? ps sí"
+        EstadosBebeFantasma.actividad_paranormaleando -> "Ahora soy tipo fantasma"
+        EstadosBebeFantasma.en_estado_de_revivicion -> "Estoy regresando… poco a poco"
+        else -> "..."
+    }
+}
+}
+
+fun main() {
+    val JackieSieras = Bebe("JackieSieras", 50, 10, 70)
+    //Quité los println del ejercicio anterior. Aunque los tengo guardaditos por si acaso. 
+
+    // Mis objetos añadidos (3/3 elementos añadidos): 
+    val superFuerza = SuperPoder("super fuerza", true, "El bebé se llama Jackie así que seguro es Jack-Jack")
+    val multimutacion = SuperPoder("multimutacion de los Increibles", true, "Aquí todas las habilidades de jack-jack (?)")
+    JackieSieras.agregar_capacidad(superFuerza)
+    JackieSieras.agregar_capacidad(multimutacion)
+    
+    println("El bebé vivo tiene ${JackieSieras.descripcion()}")
+
+    //Quería que el bebé al pasar a estdo fantasma cambiara sus super poderes, pero no lo logré. 
+    //Aunque aquí está un ejemplo de cómo quería que se viera. 
+    
+    JackieSieras.capacidades.clear() 
+    val atravesarParedes = SuperPoder("Atravesar paredes", true, null)
+    JackieSieras.agregar_capacidad(atravesarParedes)
+    
+    println("El bebé morido tiene el poder de ${JackieSieras.descripcion()}")
+    
+    //Hice el agregado/investigación del uso de "clear" para que tuviera algo diferente al 
+    //ejemplo visto en clase.
+}
